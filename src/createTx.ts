@@ -35,7 +35,7 @@ async function sendTx() {
   const token_unit = '1000000000000000000';
 
   const contract = new ethers.Contract(Token_2_ADDRESS, erc20ABI, signer);
-  const tx = await contract.functions['transferFrom'](BSCT_SAFE_ADDRESS, ACCOUNT_1, token_unit);
+  await contract.functions['transferFrom'](BSCT_SAFE_ADDRESS, ACCOUNT_1, token_unit);
 
   console.log('done.');
 }

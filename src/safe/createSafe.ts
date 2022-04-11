@@ -1,21 +1,15 @@
-import { ACCOUNT_1, ACCOUNT_2, BINAINCE_TESTNET_RPC_URL, PRIVATE_KEY_1 } from '../constant';
 import { createNewSafe, getEthAdapter } from '../tx-core';
 
-// bsct create safe
-async function main() {
-  console.log('start...');
-
+export async function createSafe(
+  creatorPrivateKey: string,
+  safeOwners: string[],
+  threshold: number,
+  isEthereum: boolean,
+  rpcUrl: string
+) {
   // settting safe intial configuration
-  const safe_owners = [ACCOUNT_1, ACCOUNT_2];
-  const threshold = 2;
-  const isEthereum = false;
-  const ethAdapter_account_1 = await getEthAdapter(PRIVATE_KEY_1, BINAINCE_TESTNET_RPC_URL);
+  const ethAdapter_creator = await getEthAdapter(creatorPrivateKey, rpcUrl);
 
   // create new safe
-  await createNewSafe(ethAdapter_account_1, safe_owners, threshold, isEthereum);
-  console.log('safe created.');
-
-  console.log('done.');
+  await createNewSafe(ethAdapter_creator, safeOwners, threshold, isEthereum);
 }
-
-main().catch(console.error);

@@ -1,12 +1,4 @@
-import {
-  BINAINCE_TESTNET_RPC_URL,
-  BSCT_SAFE_ADDRESS,
-  PANCAKE_ROUTER_ADDRESS,
-  PRIVATE_KEY_1,
-  PRIVATE_KEY_2,
-  Token_1_ADDRESS,
-  Token_2_ADDRESS,
-} from '../constant';
+import { BINAINCE_TESTNET_RPC_URL, PRIVATE_KEY_1, PRIVATE_KEY_2 } from '../constant';
 import {
   approveTransaction,
   createSafeSdk,
@@ -24,7 +16,7 @@ import { input2TxFormat } from './helper';
  * }
  **/
 
-async function approve(pancakeswapRouter: string, safe: string, tokenAddress: string) {
+export async function approve(pancakeswapRouter: string, safe: string, tokenAddress: string) {
   // settting connected chain configuration
   const isEthereum = false;
 
@@ -56,13 +48,3 @@ async function approve(pancakeswapRouter: string, safe: string, tokenAddress: st
   // execute transaction
   await executeTransaction(safeSdk_account_1, safeTransaction);
 }
-
-async function safeApprovePancakeRouter() {
-  // spender, from, erc20 address
-  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_1_ADDRESS);
-  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_2_ADDRESS);
-
-  console.log('pancakeswapRouter is approved by safe.');
-}
-
-safeApprovePancakeRouter().catch(console.error);

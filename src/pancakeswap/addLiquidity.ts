@@ -1,11 +1,8 @@
 import {
   BINAINCE_TESTNET_RPC_URL,
-  BSCT_SAFE_ADDRESS,
   PANCAKE_ROUTER_ADDRESS,
   PRIVATE_KEY_1,
   PRIVATE_KEY_2,
-  Token_1_ADDRESS,
-  Token_2_ADDRESS,
 } from '../constant';
 import {
   approveTransaction,
@@ -35,7 +32,7 @@ import { decimal2Hex, input2TxFormat } from './helper';
  * }
  **/
 
-async function addLiquidity(
+export async function addLiquidity(
   tokenA: string,
   tokenB: string,
   tokenADesired: number,
@@ -89,7 +86,3 @@ async function addLiquidity(
 
   console.log('done.');
 }
-
-addLiquidity(Token_1_ADDRESS, Token_2_ADDRESS, 100, 100, 100, 100, BSCT_SAFE_ADDRESS).catch(
-  console.error
-);

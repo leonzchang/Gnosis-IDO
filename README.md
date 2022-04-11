@@ -18,5 +18,5 @@ Install dependecies:
 yarn
 
 # run the example
-yarn start ./src/xxx/xxx.ts
+yarn start ./src/example/xxx.ts
 ```
