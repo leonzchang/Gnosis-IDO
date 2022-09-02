@@ -1,4 +1,4 @@
-import { createNewSafe, getEthAdapter } from '../tx-core';
+import { createNewSafe, getEthAdapter } from '../tx-core'
 
 export async function createSafe(
   creatorPrivateKey: string,
@@ -8,8 +8,8 @@ export async function createSafe(
   rpcUrl: string
 ) {
   // settting safe intial configuration
-  const ethAdapter_creator = await getEthAdapter(creatorPrivateKey, rpcUrl);
+  const ethAdapter_creator = await getEthAdapter(creatorPrivateKey, rpcUrl)
 
   // create new safe
-  await createNewSafe(ethAdapter_creator, safeOwners, threshold, isEthereum);
+  await createNewSafe(ethAdapter_creator, safeOwners, threshold, isEthereum)
 }

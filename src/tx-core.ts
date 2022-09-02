@@ -2,20 +2,20 @@ import Safe, {
   ContractNetworksConfig,
   SafeAccountConfig,
   SafeFactory,
-} from '@gnosis.pm/safe-core-sdk';
-import { SafeTransaction, SafeTransactionDataPartial } from '@gnosis.pm/safe-core-sdk-types';
-import EthersAdapter from '@gnosis.pm/safe-ethers-lib';
-import { ethers, Wallet } from 'ethers';
-import fs from 'fs';
+} from '@gnosis.pm/safe-core-sdk'
+import { SafeTransaction, SafeTransactionDataPartial } from '@gnosis.pm/safe-core-sdk-types'
+import EthersAdapter from '@gnosis.pm/safe-ethers-lib'
+import { ethers, Wallet } from 'ethers'
+import fs from 'fs'
 
 import {
   MULTI_SEND_ADDRESS,
   SAFE_MASTER_COPY_ADDRESS,
   SAFE_PROXY_FACTORY_ADDRESS,
-} from './constant';
+} from './constant'
 
 export async function configNetworkContract(ethAdapter: EthersAdapter) {
-  const id = await ethAdapter.getChainId();
+  const id = await ethAdapter.getChainId()
   // https://github.com/gnosis/safe-contracts/blob/main/CHANGELOG.md
   const contractNetworks: ContractNetworksConfig = {
     [id]: {
@@ -23,16 +23,16 @@ export async function configNetworkContract(ethAdapter: EthersAdapter) {
       safeMasterCopyAddress: SAFE_MASTER_COPY_ADDRESS,
       safeProxyFactoryAddress: SAFE_PROXY_FACTORY_ADDRESS,
     },
-  };
-  return contractNetworks;
+  }
+  return contractNetworks
 }
 
 export async function getEthAdapter(private_key: string, rpcurl: string) {
-  const provider = await new ethers.providers.JsonRpcProvider(rpcurl);
-  const signer = new Wallet(private_key, provider);
-  const ethAdapter_owner = new EthersAdapter({ ethers, signer });
+  const provider = await new ethers.providers.JsonRpcProvider(rpcurl)
+  const signer = new Wallet(private_key, provider)
+  const ethAdapter_owner = new EthersAdapter({ ethers, signer })
 
-  return ethAdapter_owner;
+  return ethAdapter_owner
 }
 
 export async function createNewSafe(
@@ -41,27 +41,27 @@ export async function createNewSafe(
   threshold: number,
   isEthereum = true
 ) {
-  let safeFactory: SafeFactory;
+  let safeFactory: SafeFactory
   if (isEthereum) {
-    safeFactory = await SafeFactory.create({ ethAdapter });
+    safeFactory = await SafeFactory.create({ ethAdapter })
   } else {
-    const contractNetworks = await configNetworkContract(ethAdapter);
-    safeFactory = await SafeFactory.create({ ethAdapter, contractNetworks });
+    const contractNetworks = await configNetworkContract(ethAdapter)
+    safeFactory = await SafeFactory.create({ ethAdapter, contractNetworks })
   }
 
   const safeAccountConfig: SafeAccountConfig = {
     owners,
     threshold,
-  };
+  }
   // create safe and return sdk connection
-  const safeSdk = await safeFactory.deploySafe({ safeAccountConfig });
-  const newSafeAddress = safeSdk.getAddress();
+  const safeSdk = await safeFactory.deploySafe({ safeAccountConfig })
+  const newSafeAddress = safeSdk.getAddress()
 
   fs.writeFile(`./.safe_address`, `safe_address: "${newSafeAddress}"\n`, { flag: 'a' }, (err) => {
     if (err) {
-      console.error(`failed to write file: ${err}`);
+      console.error(`failed to write file: ${err}`)
     }
-  });
+  })
 }
 
 // to: 0x<address>, value: eth_value_in_wei, data: 0x<data>
@@ -75,24 +75,24 @@ export async function createSafeTransferTransaction(
     to,
     value,
     data,
-  };
-  const safeTransaction = await safeSdk.createTransaction(transaction);
+  }
+  const safeTransaction = await safeSdk.createTransaction(transaction)
   // creator sign transaction
   // HACK: if transaction creator and executetor are not the same, transaction creator didn't sign will cause transaction failed
-  await safeSdk.signTransaction(safeTransaction);
-  const txHash = await safeSdk.getTransactionHash(safeTransaction);
+  await safeSdk.signTransaction(safeTransaction)
+  const txHash = await safeSdk.getTransactionHash(safeTransaction)
 
-  return { txHash, safeTransaction };
+  return { txHash, safeTransaction }
 }
 
 export async function approveTransaction(safeSdk: Safe, txHash: string) {
-  const approveTxResponse = await safeSdk.approveTransactionHash(txHash);
-  await approveTxResponse.transactionResponse?.wait();
+  const approveTxResponse = await safeSdk.approveTransactionHash(txHash)
+  await approveTxResponse.transactionResponse?.wait()
 }
 
 export async function executeTransaction(safe: Safe, safeTransaction: SafeTransaction) {
-  const executeTxResponse = await safe.executeTransaction(safeTransaction);
-  await executeTxResponse.transactionResponse?.wait();
+  const executeTxResponse = await safe.executeTransaction(safeTransaction)
+  await executeTxResponse.transactionResponse?.wait()
 }
 
 export async function createSafeSdk(
@@ -100,13 +100,13 @@ export async function createSafeSdk(
   safeAddress: string,
   isEthereum = true
 ) {
-  let safeSdk: Safe;
+  let safeSdk: Safe
   if (isEthereum) {
-    safeSdk = await Safe.create({ ethAdapter, safeAddress });
+    safeSdk = await Safe.create({ ethAdapter, safeAddress })
   } else {
-    const contractNetworks = await configNetworkContract(ethAdapter);
-    safeSdk = await Safe.create({ ethAdapter, safeAddress, contractNetworks });
+    const contractNetworks = await configNetworkContract(ethAdapter)
+    safeSdk = await Safe.create({ ethAdapter, safeAddress, contractNetworks })
   }
 
-  return safeSdk;
+  return safeSdk
 }

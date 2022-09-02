@@ -3,15 +3,15 @@ import {
   PANCAKE_ROUTER_ADDRESS,
   PRIVATE_KEY_1,
   PRIVATE_KEY_2,
-} from '../constant';
+} from '../constant'
 import {
   approveTransaction,
   createSafeSdk,
   createSafeTransferTransaction,
   executeTransaction,
   getEthAdapter,
-} from '../tx-core';
-import { decimal2Hex, input2TxFormat } from './helper';
+} from '../tx-core'
+import { decimal2Hex, input2TxFormat } from './helper'
 
 /** PancakeRouter addLiquidity
  * function addLiquidity(
@@ -42,47 +42,47 @@ export async function addLiquidity(
   safe: string
 ) {
   // settting connected chain configuration
-  const isEthereum = false;
+  const isEthereum = false
 
   // pancakeRouter contract addLiquidity function hash
-  const addLiquidityFunctionHash = '0xe8e33700';
+  const addLiquidityFunctionHash = '0xe8e33700'
 
   // using gnosis safe to create a transaction with caling createPair in data
-  const token1 = input2TxFormat(tokenA);
-  const token2 = input2TxFormat(tokenB);
-  const amountADesired = decimal2Hex(tokenADesired);
-  const amountBDesired = decimal2Hex(tokenBDesired);
-  const amountAMin = decimal2Hex(tokenAMin);
-  const amountBMin = decimal2Hex(tokenBMin);
-  const to = input2TxFormat(safe);
-  const time = (Math.floor(Date.now() / 1000) + 60 * 10).toString(16);
-  const deadline = input2TxFormat(time);
+  const token1 = input2TxFormat(tokenA)
+  const token2 = input2TxFormat(tokenB)
+  const amountADesired = decimal2Hex(tokenADesired)
+  const amountBDesired = decimal2Hex(tokenBDesired)
+  const amountAMin = decimal2Hex(tokenAMin)
+  const amountBMin = decimal2Hex(tokenBMin)
+  const to = input2TxFormat(safe)
+  const time = (Math.floor(Date.now() / 1000) + 60 * 10).toString(16)
+  const deadline = input2TxFormat(time)
 
   // create adapter
-  const ethAdapter_account_1 = await getEthAdapter(PRIVATE_KEY_1, BINAINCE_TESTNET_RPC_URL);
-  const ethAdapter_account_2 = await getEthAdapter(PRIVATE_KEY_2, BINAINCE_TESTNET_RPC_URL);
+  const ethAdapter_account_1 = await getEthAdapter(PRIVATE_KEY_1, BINAINCE_TESTNET_RPC_URL)
+  const ethAdapter_account_2 = await getEthAdapter(PRIVATE_KEY_2, BINAINCE_TESTNET_RPC_URL)
 
   // create transaction
-  const safeSdk_account_1 = await createSafeSdk(ethAdapter_account_1, safe, isEthereum);
+  const safeSdk_account_1 = await createSafeSdk(ethAdapter_account_1, safe, isEthereum)
   // (internal call) pancakeswapRouter contract call erc20 contract transferFrom safe
-  const data = `${addLiquidityFunctionHash}${token1}${token2}${amountADesired}${amountBDesired}${amountAMin}${amountBMin}${to}${deadline}`;
+  const data = `${addLiquidityFunctionHash}${token1}${token2}${amountADesired}${amountBDesired}${amountAMin}${amountBMin}${to}${deadline}`
   const { txHash, safeTransaction } = await createSafeTransferTransaction(
     safeSdk_account_1,
     PANCAKE_ROUTER_ADDRESS,
     '0',
     data
-  );
+  )
 
-  console.log('transaction');
+  console.log('transaction')
   // approve transaction
-  const safeSdk_account_2 = await createSafeSdk(ethAdapter_account_2, safe, isEthereum);
-  await approveTransaction(safeSdk_account_2, txHash);
+  const safeSdk_account_2 = await createSafeSdk(ethAdapter_account_2, safe, isEthereum)
+  await approveTransaction(safeSdk_account_2, txHash)
 
-  console.log('approve');
+  console.log('approve')
 
   // execute transaction
-  await executeTransaction(safeSdk_account_1, safeTransaction);
-  console.log('execute');
+  await executeTransaction(safeSdk_account_1, safeTransaction)
+  console.log('execute')
 
-  console.log('done.');
+  console.log('done.')
 }

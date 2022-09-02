@@ -3,15 +3,15 @@ import {
   PANCAKE_ROUTER_ADDRESS,
   Token_1_ADDRESS,
   Token_2_ADDRESS,
-} from '../constant';
-import { approve } from '../pancakeswap/approve';
+} from '../constant'
+import { approve } from '../pancakeswap/approve'
 
 async function safeApprovePancakeRouter() {
   // spender, from, erc20 address
-  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_1_ADDRESS);
-  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_2_ADDRESS);
+  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_1_ADDRESS)
+  await approve(PANCAKE_ROUTER_ADDRESS, BSCT_SAFE_ADDRESS, Token_2_ADDRESS)
 
-  console.log('pancakeswapRouter is approved by safe.');
+  console.log('pancakeswapRouter is approved by safe.')
 }
 
-safeApprovePancakeRouter().catch(console.error);
+safeApprovePancakeRouter().catch(console.error)

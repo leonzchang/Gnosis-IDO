@@ -1,3 +1,4 @@
 node_modules
 .env
 .safe_address
+.address
